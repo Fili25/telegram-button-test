@@ -6,41 +6,49 @@
     <title>Telegram App Buttons</title>
     <script src="https://telegram.org/js/telegram-apps.js"></script>
     <script>
-        // Проверяем окружение
-        function checkEnvironment() {
-            if (!Telegram.WebApp.initData) {
-                alert("Этот сайт работает только в Telegram WebApp.");
-            }
+        // Проверка окружения
+        function isTelegramWebApp() {
+            return Telegram.WebApp.initData !== undefined;
         }
 
-        // Открыть приложение с помощью OpenTelegramLink
+        // Открыть приложение через OpenTelegramLink
         function openWithSDK() {
-            try {
-                Telegram.Utils.OpenTelegramLink("https://t.me/notcoin_bot/click");
-            } catch (e) {
-                console.error("Ошибка с OpenTelegramLink:", e);
-                alert("Не удалось открыть ссылку. Попробуйте другой способ.");
+            if (isTelegramWebApp()) {
+                try {
+                    Telegram.Utils.OpenTelegramLink("https://t.me/notcoin_bot/click");
+                } catch (error) {
+                    console.error("Ошибка при вызове OpenTelegramLink:", error);
+                    alert("Ошибка: Не удалось открыть ссылку через SDK.");
+                }
+            } else {
+                alert("OpenTelegramLink доступен только в Telegram WebApp.");
             }
         }
 
-        // Открыть приложение с помощью WebApp.openTgLink
+        // Открыть приложение через WebApp.openTgLink
         function openWithPlatform() {
-            try {
-                Telegram.WebApp.openTgLink("https://t.me/notcoin_bot/click");
-            } catch (e) {
-                console.error("Ошибка с openTgLink:", e);
-                alert("Не удалось открыть ссылку. Попробуйте другой способ.");
+            if (isTelegramWebApp()) {
+                try {
+                    Telegram.WebApp.openTgLink("https://t.me/notcoin_bot/click");
+                } catch (error) {
+                    console.error("Ошибка при вызове openTgLink:", error);
+                    alert("Ошибка: Не удалось открыть ссылку через WebApp.");
+                }
+            } else {
+                alert("openTgLink доступен только в Telegram WebApp.");
             }
         }
 
-        // Инициализация при загрузке страницы
+        // Показать сообщение об ошибке для браузера
         document.addEventListener("DOMContentLoaded", () => {
-            checkEnvironment();
+            if (!isTelegramWebApp()) {
+                alert("Этот сайт должен быть запущен в Telegram WebApp.");
+            }
         });
     </script>
 </head>
 <body>
-    <h1>Telegram App Launch Buttons</h1>
+    <h1>Telegram App Buttons</h1>
     <button onclick="openWithSDK()">Open App with SDK</button>
     <button onclick="openWithPlatform()">Open App with WebApp Method</button>
     <a href="https://t.me/notcoin_bot/click" target="_blank">
