@@ -6,30 +6,45 @@
     <title>Telegram App Buttons</title>
     <script src="https://telegram.org/js/telegram-apps.js"></script>
     <script>
-        // Function for the first button using OpenTelegramLink
-        function openWithSDK() {
-            Telegram.Utils.OpenTelegramLink("https://t.me/notcoin_bot/click");
+        // Проверяем окружение
+        function checkEnvironment() {
+            if (!Telegram.WebApp.initData) {
+                alert("Этот сайт работает только в Telegram WebApp.");
+            }
         }
 
-        // Function for the second button using web-app-open-tg-link
-        function openWithPlatform() {
-            Telegram.WebApp.openTgLink("https://t.me/notcoin_bot/click");
+        // Открыть приложение с помощью OpenTelegramLink
+        function openWithSDK() {
+            try {
+                Telegram.Utils.OpenTelegramLink("https://t.me/notcoin_bot/click");
+            } catch (e) {
+                console.error("Ошибка с OpenTelegramLink:", e);
+                alert("Не удалось открыть ссылку. Попробуйте другой способ.");
+            }
         }
+
+        // Открыть приложение с помощью WebApp.openTgLink
+        function openWithPlatform() {
+            try {
+                Telegram.WebApp.openTgLink("https://t.me/notcoin_bot/click");
+            } catch (e) {
+                console.error("Ошибка с openTgLink:", e);
+                alert("Не удалось открыть ссылку. Попробуйте другой способ.");
+            }
+        }
+
+        // Инициализация при загрузке страницы
+        document.addEventListener("DOMContentLoaded", () => {
+            checkEnvironment();
+        });
     </script>
 </head>
 <body>
     <h1>Telegram App Launch Buttons</h1>
-
-    <!-- Button 1: Open with SDK -->
     <button onclick="openWithSDK()">Open App with SDK</button>
-
-    <!-- Button 2: Open with WebApp Method -->
     <button onclick="openWithPlatform()">Open App with WebApp Method</button>
-
-    <!-- Button 3: Simple Link -->
     <a href="https://t.me/notcoin_bot/click" target="_blank">
         <button>Open App via Link</button>
     </a>
-
 </body>
 </html>
